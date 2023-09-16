@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ridify/auth/phone_reg.dart';
+// import 'package:ridify/auth/phone_reg.dart';
 // import 'package:ridify/mapbox.dart';
 // import 'auth/welcome.dart';
+// import 'package:ridify/auth/otp_screen.dart';
+import 'package:ridify/auth/user_detail.dart';
 
 
 void main(){
@@ -9,7 +11,9 @@ void main(){
     const MaterialApp(
       debugShowCheckedModeBanner: false,
       // home:WelcomeScreen(),
-      home: PhoneRegistration(),
+      // home: PhoneRegistration(),
+      // home: OtpCode(),
+      home: UserDetail(),
     ),
   );
 }

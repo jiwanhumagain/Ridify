@@ -12,20 +12,26 @@ class _PhoneRegistration extends State<PhoneRegistration> {
   final TextEditingController phoneController = TextEditingController();
   Country selectedCountry = Country(
     phoneCode: "977",
-    countryCode: "Us",
+    countryCode: "NP",
     e164Sc: 1,
     geographic: true,
     level: 2,
     name: "Nepal",
     example: "Nepal",
     displayName: "Nepal",
-    displayNameNoCountryCode: "NEP",
-    e164Key: "Nep",
+    displayNameNoCountryCode: "NP",
+    e164Key: "NP",
   );
 
   @override
   Widget build(BuildContext context) {
+    phoneController.selection = TextSelection.fromPosition(
+      TextPosition(
+        offset: phoneController.text.length,
+      ),
+    );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -59,10 +65,14 @@ class _PhoneRegistration extends State<PhoneRegistration> {
                 height: 20,
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: TextFormField(
                   controller: phoneController,
+                  onChanged: (value) {
+                    setState(() {
+                      phoneController.text = value;
+                    });
+                  },
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(
@@ -70,6 +80,9 @@ class _PhoneRegistration extends State<PhoneRegistration> {
                       ),
                     ),
                     hintText: 'Enter your phone number',
+                    hintStyle: const TextStyle(
+                      color: Color.fromARGB(95, 50, 50, 50),
+                    ),
                     prefixIcon: Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 15,
@@ -94,38 +107,38 @@ class _PhoneRegistration extends State<PhoneRegistration> {
                       ),
                     ),
                     suffixIcon: phoneController.text.length == 10
-                        ? Container(
-                           padding: EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 3,
-                            ),
-                            height: 5,
-                            width: 5,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.greenAccent,
-                            ),
-                            child: const Icon(
-                              Icons.done,
-                              color: Colors.white,
-                              size: 10,
+                        ? Padding(
+                            padding: const EdgeInsets.all(7.0),
+                            child: Container(
+                              height: 2,
+                              width: 2,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
+                              child: const Icon(
+                                Icons.done,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           )
-                        : Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 3,
-                            ),
-                            height: 4,
-                            width: 2,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.greenAccent,
-                            ),
-                            child: const Icon(
-                              Icons.done,
-                              color: Colors.white,
-                              size: 15,
+                        : Padding(
+                            padding: const EdgeInsets.all(7.0),
+                            child: Container(
+                              height: 5,
+                              width: 5,
+                              decoration: phoneController.text.isEmpty
+                                  ? const BoxDecoration()
+                                  : const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                    ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           ),
                   ),

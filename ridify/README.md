@@ -17,4 +17,8 @@ samples, guidance on mobile development, and a full API reference.
 
 
 Dependencies
+for country picker in phone_reg.dart
 -flutter pub add country_picker
+
+for otp verification in otp_screen
+-flutter pub add otp_text_field
