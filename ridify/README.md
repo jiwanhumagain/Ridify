@@ -22,3 +22,9 @@ for country picker in phone_reg.dart
 
 for otp verification in otp_screen
 -flutter pub add otp_text_field
+
+for formatting date
+-flutter pub add intl
+
+for email validation 
+-flutter pub add email_validator

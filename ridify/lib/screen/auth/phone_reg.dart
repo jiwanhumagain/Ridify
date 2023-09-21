@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ridify/widgets/custom_buttons.dart';
+import 'package:ridify/screen/auth/otp_screen.dart';
 import 'package:country_picker/country_picker.dart';
 
 class PhoneRegistration extends StatefulWidget {
   const PhoneRegistration({super.key});
   @override
-  State<PhoneRegistration> createState() => _PhoneRegistration();
+  State<PhoneRegistration> createState() => _PhoneRegistrationState();
 }
 
-class _PhoneRegistration extends State<PhoneRegistration> {
+class _PhoneRegistrationState extends State<PhoneRegistration> {
   final TextEditingController phoneController = TextEditingController();
   Country selectedCountry = Country(
     phoneCode: "977",
@@ -31,8 +31,8 @@ class _PhoneRegistration extends State<PhoneRegistration> {
       ),
     );
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
@@ -145,12 +145,34 @@ class _PhoneRegistration extends State<PhoneRegistration> {
                   keyboardType: TextInputType.phone,
                 ),
               ),
-              const Padding(
+               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 35, vertical: 25),
                 child: SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: CustomButtons(buttonText: "Login"),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OtpCode(),
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.purple),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                    ),
+                    label: const Text("Send Code"),
+                    icon: const Icon(Icons.arrow_right_alt),
+                  ),
                 ),
               ),
             ],

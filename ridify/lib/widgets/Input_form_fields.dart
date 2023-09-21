@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 
 class InputFormField extends StatelessWidget {
-  const InputFormField(
-      {super.key, required this.iconType, required this.placeHolder});
+  InputFormField({
+    super.key,
+    required this.iconType,
+    required this.placeHolder,
+  });
+  final TextEditingController dummyController=TextEditingController();
   final String placeHolder;
   final Widget iconType;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: dummyController,
+      onChanged: (ValueKey){
+        print(dummyController);
+      },
       decoration: InputDecoration(
         fillColor: Colors.purple.shade50,
         filled: true,

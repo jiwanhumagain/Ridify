@@ -1,15 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:ridify/auth/phone_reg.dart';
-
 class CustomButtons extends StatelessWidget {
   final String buttonText;
   const CustomButtons({super.key, required this.buttonText});
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      
-      onPressed: (){
-        PhoneRegistration;
+      onPressed: () {
+        // if (buttonText == 'Get Started') {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const Ridify(),
+        //     ),
+        //   );
+        //   if (buttonText == 'Login') {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const Ridify(),
+        //     ),
+        //   );
+        // }
+        // if (buttonText == 'Get Started') {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const Ridify(),
+        //     ),
+        //   );
+        // }
+        // if (buttonText == 'Get Started') {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const Ridify(),
+        //     ),
+        //   );
+        // }
+        // }
       },
       style: ButtonStyle(
         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),

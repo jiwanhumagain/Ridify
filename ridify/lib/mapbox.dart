@@ -16,6 +16,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
 @override
 Widget build(BuildContext context) {
   return Scaffold(
+    appBar: AppBar(),
       body: Stack(
         children: [
           FlutterMap(

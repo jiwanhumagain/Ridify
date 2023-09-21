@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ridify/widgets/custom_buttons.dart';
+import 'package:ridify/screen/auth/phone_reg.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Ridify"),
-      ),
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -46,11 +44,34 @@ class WelcomeScreen extends StatelessWidget {
                 const SizedBox(
                   height: 35,
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: CustomButtons(buttonText: "Get Started"),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PhoneRegistration(),
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.purple),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                    ),
+                    label: const Text("Get Started"),
+                    icon: const Icon(Icons.arrow_right_alt),
+                  ),
                 ),
+                
               ],
             ),
           ),

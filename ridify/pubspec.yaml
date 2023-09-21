@@ -40,6 +40,8 @@ dependencies:
   latlong2: ^0.9.0
   country_picker: ^2.0.21
   otp_text_field: ^1.1.3
+  intl: ^0.18.1
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,10 @@ flutter:
     - assets/images/logo.png
     - assets/images/register.png
     - assets/images/otp.png
+    - assets/images/rental.png
+    - assets/images/ride.png
+    - assets/images/taxi.png
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
