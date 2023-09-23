@@ -42,7 +42,7 @@ class _RideTaxiState extends State<RideTaxi> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35, vertical: 55),
+              padding: EdgeInsets.symmetric(horizontal: 35, vertical: 25),
               child: SizedBox(
                 height: 50,
                 width: double.infinity,

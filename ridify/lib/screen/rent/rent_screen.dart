@@ -25,7 +25,7 @@ class _RentScreenState extends State<RentScreen> {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             const Text(
               "You have not rent a car. Rent it now ",
