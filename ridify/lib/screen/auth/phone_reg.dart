@@ -9,6 +9,7 @@ class PhoneRegistration extends StatefulWidget {
 }
 
 class _PhoneRegistrationState extends State<PhoneRegistration> {
+  final _formKey=GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
   Country selectedCountry = Country(
     phoneCode: "977",
@@ -64,85 +65,103 @@ class _PhoneRegistrationState extends State<PhoneRegistration> {
               const SizedBox(
                 height: 20,
               ),
+              
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: TextFormField(
-                  controller: phoneController,
-                  onChanged: (value) {
-                    setState(() {
-                      phoneController.text = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
+              
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: phoneController,
+                    validator: (value) {
+                      if (value!.isEmpty){
+                        return "Enter Your Phone number";
+                      }
+                      else if(value.length<10){
+                        return "Yor number must be length of 10";
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      
+                
+
+                      setState(() {
+                        phoneController.text = value;
+                      },);
+                    },
+                    
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
-                    ),
-                    hintText: 'Enter your phone number',
-                    hintStyle: const TextStyle(
-                      color: Color.fromARGB(95, 50, 50, 50),
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 5,
+                      hintText: 'Enter your phone number',
+                      hintStyle: const TextStyle(
+                        color: Color.fromARGB(95, 50, 50, 50),
                       ),
-                      child: InkWell(
-                        onTap: () {
-                          showCountryPicker(
-                            context: context,
-                            countryListTheme: const CountryListThemeData(
-                              bottomSheetHeight: 500,
-                            ),
-                            onSelect: (value) {
-                              setState(() {
-                                selectedCountry = value;
-                              });
-                            },
-                          );
-                        },
-                        child: Text(
-                            "${selectedCountry.flagEmoji}+${selectedCountry.phoneCode}"),
+                      prefixIcon: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 5,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            showCountryPicker(
+                              context: context,
+                              countryListTheme: const CountryListThemeData(
+                                bottomSheetHeight: 500,
+                              ),
+                              onSelect: (value) {
+                                setState(() {
+                                  selectedCountry = value;
+                                });
+                              },
+                            );
+                          },
+                          child: Text(
+                              "${selectedCountry.flagEmoji}+${selectedCountry.phoneCode}"),
+                        ),
                       ),
+                      suffixIcon: phoneController.text.length == 10
+                          ? Padding(
+                              padding: const EdgeInsets.all(7.0),
+                              child: Container(
+                                height: 2,
+                                width: 2,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                                child: const Icon(
+                                  Icons.done,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(7.0),
+                              child: Container(
+                                height: 5,
+                                width: 5,
+                                decoration: phoneController.text.isEmpty
+                                    ? const BoxDecoration()
+                                    : const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.red,
+                                      ),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
                     ),
-                    suffixIcon: phoneController.text.length == 10
-                        ? Padding(
-                            padding: const EdgeInsets.all(7.0),
-                            child: Container(
-                              height: 2,
-                              width: 2,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.green,
-                              ),
-                              child: const Icon(
-                                Icons.done,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.all(7.0),
-                            child: Container(
-                              height: 5,
-                              width: 5,
-                              decoration: phoneController.text.isEmpty
-                                  ? const BoxDecoration()
-                                  : const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.red,
-                                    ),
-                              child: const Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
+                    keyboardType: TextInputType.phone,
                   ),
-                  keyboardType: TextInputType.phone,
                 ),
               ),
                Padding(
@@ -152,12 +171,23 @@ class _PhoneRegistrationState extends State<PhoneRegistration> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.push(
+                       if(_formKey.currentState!.validate()){
+                        
+                        Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const OtpCode(),
                         ),
                       );
+
+                      }
+                    
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const OtpCode(),
+                      //   ),
+                      // );
                     },
                     style: ButtonStyle(
                       foregroundColor:
