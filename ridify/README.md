@@ -28,3 +28,6 @@ for formatting date
 
 for email validation 
 -flutter pub add email_validator
+
+for firebase_core
+- flutter pub add firebase_core

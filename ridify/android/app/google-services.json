@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "907268974615",
+    "project_id": "ridify-7547d",
+    "storage_bucket": "ridify-7547d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907268974615:android:b798353ae2201bf451d452",
+        "android_client_info": {
+          "package_name": "com.example.ridify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMeS3BVMdUlGkUA0eOKnyuP_bfE_2z2-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
