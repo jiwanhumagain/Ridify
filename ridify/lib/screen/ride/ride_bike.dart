@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ridify/mapbox.dart';
+import 'package:ridify/maps/mapbox.dart';
 
 class RideBikeScreen extends StatefulWidget {
   const RideBikeScreen({super.key});

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ridify/global/global.dart';
 import 'package:ridify/screen/auth/otp_screen.dart';
 import 'package:country_picker/country_picker.dart';
 
@@ -9,7 +11,8 @@ class PhoneRegistration extends StatefulWidget {
 }
 
 class _PhoneRegistrationState extends State<PhoneRegistration> {
-  final _formKey=GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  bool loading = false;
   final TextEditingController phoneController = TextEditingController();
   Country selectedCountry = Country(
     phoneCode: "977",
@@ -23,6 +26,36 @@ class _PhoneRegistrationState extends State<PhoneRegistration> {
     displayNameNoCountryCode: "NP",
     e164Key: "NP",
   );
+  // void _submit() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     await firebaseAuth.verifyPhoneNumber(
+  //         phoneNumber: phoneController.text.trim(),
+  //         verificationCompleted: (e) {
+  //           Fluttertoast.showToast(msg: "Successfully send code");
+  //         },
+  //         verificationFailed: (e) {
+  //           print("object          + $e");
+  //           Fluttertoast.showToast(msg: "Failed to send Code");
+  //         },
+  //         codeSent: (verificationId, forceResendingToken) {
+  //           print("code Sent");
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (context) => OtpCode(
+  //                 verificationId: verificationId,
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //         codeAutoRetrievalTimeout: (e) {
+  //           Fluttertoast.showToast(msg: "Time Out Please verify again");
+  //         });
+  //   }
+  //   // setState(() {
+  //   //   loading = true;
+  //   // });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -65,32 +98,28 @@ class _PhoneRegistrationState extends State<PhoneRegistration> {
               const SizedBox(
                 height: 20,
               ),
-              
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Form(
                   key: _formKey,
                   child: TextFormField(
                     controller: phoneController,
                     validator: (value) {
-                      if (value!.isEmpty){
+                      if (value!.isEmpty) {
                         return "Enter Your Phone number";
-                      }
-                      else if(value.length<10){
-                        return "Yor number must be length of 10";
+                      } else if (value.length < 10) {
+                        return "Your number must be length of 10";
                       }
                       return null;
                     },
                     onChanged: (value) {
-                      
-                
-
-                      setState(() {
-                        phoneController.text = value;
-                      },);
+                      setState(
+                        () {
+                          phoneController.text = value;
+                        },
+                      );
                     },
-                    
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(
@@ -124,7 +153,7 @@ class _PhoneRegistrationState extends State<PhoneRegistration> {
                               "${selectedCountry.flagEmoji}+${selectedCountry.phoneCode}"),
                         ),
                       ),
-                      suffixIcon: phoneController.text.length == 10
+                      suffixIcon: phoneController.text.length == 14
                           ? Padding(
                               padding: const EdgeInsets.all(7.0),
                               child: Container(
@@ -164,30 +193,22 @@ class _PhoneRegistrationState extends State<PhoneRegistration> {
                   ),
                 ),
               ),
-               Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 35, vertical: 25),
                 child: SizedBox(
                   height: 50,
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                       if(_formKey.currentState!.validate()){
-                        
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OtpCode(),
-                        ),
-                      );
-
-                      }
-                    
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const OtpCode(),
-                      //   ),
-                      // );
+                    // onPressed: _submit,
+                    onPressed: (){
+                       Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OtpCode(
+                  // verificationId: verificationId,
+                ),
+              ),
+            );
                     },
                     style: ButtonStyle(
                       foregroundColor:

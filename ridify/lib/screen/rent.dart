@@ -22,19 +22,19 @@ class _RentalState extends State<Rental> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('AppBar Demo'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            tooltip: 'Show Snackbar',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('AppBar Demo'),
+      //   actions: <Widget>[
+      //     IconButton(
+      //       icon: const Icon(Icons.account_circle),
+      //       tooltip: 'Show Snackbar',
+      //       onPressed: () {
+      //         ScaffoldMessenger.of(context).showSnackBar(
+      //             const SnackBar(content: Text('This is a snackbar')));
+      //       },
+      //     ),
+      //   ],
+      // ),
       body:SafeArea(
         // child: Padding(
         //   padding: const EdgeInsets.all(8.0),

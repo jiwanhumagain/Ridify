@@ -1,22 +1,45 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:ridify/global/global.dart';
 import 'package:ridify/screen/auth/user_detail.dart';
 // import 'package:ridify/widgets/custom_buttons.dart';
 
 class OtpCode extends StatefulWidget {
-  const OtpCode({super.key});
+  // final String verificationId;
+  // const OtpCode({Key? key, required this.verificationId});
   @override
   State<OtpCode> createState() => _OtpCodeState();
 }
 
 class _OtpCodeState extends State<OtpCode> {
+  final OtpFieldController phoneController = OtpFieldController();
+
+  // void _submit() async {
+  //   final authCrendital = PhoneAuthProvider.credential(
+  //       verificationId: widget.verificationId,
+  //       smsCode: phoneController.toString());
+
+  //   try {
+  //     await firebaseAuth.signInWithCredential(authCrendital);
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const UserDetail(),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     print("object    +$e");
+  //     Fluttertoast.showToast(msg: "Error Occured in this otp screen");
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -51,10 +74,11 @@ class _OtpCodeState extends State<OtpCode> {
                 height: 25,
               ),
               OTPTextField(
-                length: 5,
+                controller: phoneController,
+                length: 6,
                 width: MediaQuery.of(context).size.width,
-                fieldWidth: 50,
-                style: const TextStyle(fontSize: 17),
+                fieldWidth: 40,
+                style: const TextStyle(fontSize: 13),
                 textFieldAlignment: MainAxisAlignment.spaceAround,
                 fieldStyle: FieldStyle.box,
                 onCompleted: (pin) {},
@@ -68,6 +92,7 @@ class _OtpCodeState extends State<OtpCode> {
                   height: 50,
                   width: double.infinity,
                   child: ElevatedButton.icon(
+                    // onPressed: _submit,
                     onPressed: () {
                       Navigator.push(
                         context,

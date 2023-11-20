@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ridify/mapbox.dart';
+import 'package:ridify/maps/mapbox.dart';
 
 class RideTaxi extends StatefulWidget {
   const RideTaxi({Key? key}) : super(key: key);

@@ -28,3 +28,15 @@ for formatting date
 
 for email validation 
 -flutter pub add email_validator
+
+Geo Locator
+-flutter pub add geolocator
+
+MapBoxGl
+-flutter pub add mapbox_gl_dart
+
+Open Street Map
+-flutter pub add flutter_osm_plugin
+
+location search and pick
+-flutter pub add open_street_map_search_and_pick
