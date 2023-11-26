@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -10,6 +11,7 @@ import 'package:ridify_driver/assistant/assistant_methods.dart';
 import 'package:ridify_driver/global/global.dart';
 import 'package:ridify_driver/models/userRideRequestInformation.dart';
 import 'package:ridify_driver/screen/splashscreen/splash.dart';
+import 'package:ridify_driver/widgets/fareAmountDialog.dart';
 import 'package:ridify_driver/widgets/progressDialog.dart';
 
 class NewTripScreen extends StatefulWidget {
@@ -185,7 +187,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
   saveAssignedDriverDetailsToUserRideRequest() {
     DatabaseReference databaseReference = FirebaseDatabase.instance
         .ref()
-        .child("All Ride Request")
+        .child("All Ride Requests")
         .child(widget.userRideRequestDetails!.rideRequestId!);
     Map driverLocationMap = {
       "latitude": driverCurrentPosition!.latitude.toString(),
@@ -275,7 +277,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
       FirebaseDatabase.instance
           .ref()
-          .child("All Ride Request")
+          .child("All Ride Requests")
           .child(widget.userRideRequestDetails!.rideRequestId!)
           .child("driverLocation")
           .set(driverLatLngDataMap);
@@ -309,6 +311,83 @@ class _NewTripScreenState extends State<NewTripScreen> {
       }
       isRequestDirectionDetails = false;
     }
+  }
+
+  endTripNow() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => ProgressDialog(
+        message: "Please Wait...",
+      ),
+    );
+    var currentDriverPositionLatLng = LatLng(
+      onlineDriverCurrentPosition!.latitude,
+      onlineDriverCurrentPosition!.longitude,
+    );
+    var tripDirectionDetails =
+        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
+      currentDriverPositionLatLng,
+      widget.userRideRequestDetails!.originLatLng!,
+    );
+    double totalFareAmount =
+        AssistantMethods.calculateFareAmountFromOriginToDestination(
+            tripDirectionDetails);
+
+    FirebaseDatabase.instance
+        .ref()
+        .child("All Ride Requests")
+        .child(widget.userRideRequestDetails!.rideRequestId!)
+        .child("fareAmount")
+        .set(totalFareAmount.toString());
+
+    FirebaseDatabase.instance
+        .ref()
+        .child("All Ride Requests")
+        .child(widget.userRideRequestDetails!.rideRequestId!)
+        .child("status")
+        .set("ended");
+
+    Navigator.pop(context);
+
+    showDialog(
+      context: context,
+      builder: (context) => FareAmountCollectionDialog(totalFareAmount: totalFareAmount),
+    );
+
+    //save fare amount in drivers earnings
+
+    saveFareAmountToDriverEarnings(totalFareAmount);
+  }
+
+  saveFareAmountToDriverEarnings(double totalFareAmount) {
+    FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(firebaseAuth.currentUser!.uid)
+        .child("earnings")
+        .once()
+        .then((snap) {
+      if (snap.snapshot.value != null) {
+        double oldEarnings = double.parse(snap.snapshot.value.toString());
+
+        double driverTotalEarnings = totalFareAmount + oldEarnings;
+
+        FirebaseDatabase.instance
+            .ref()
+            .child("drivers")
+            .child(firebaseAuth.currentUser!.uid)
+            .child("earnings")
+            .set(driverTotalEarnings.toString());
+      } else {
+        FirebaseDatabase.instance
+            .ref()
+            .child("drivers")
+            .child(firebaseAuth.currentUser!.uid)
+            .child("earnings")
+            .set(totalFareAmount.toString());
+      }
+    });
   }
 
   @override
@@ -464,8 +543,50 @@ class _NewTripScreenState extends State<NewTripScreen> {
                         height: 10,
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          
+                        onPressed: () async {
+                          if (rideRequestStatus == "acceptde") {
+                            rideRequestStatus = "arrived";
+                            FirebaseDatabase.instance
+                                .ref()
+                                .child("All Ride Requests")
+                                .child(widget
+                                    .userRideRequestDetails!.rideRequestId!)
+                                .child("status")
+                                .set(rideRequestStatus);
+
+                            setState(() {
+                              buttonTitle = "Let's Go";
+                              buttonColor = Colors.lightGreen;
+                            });
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) => ProgressDialog(
+                                message: "Loading...",
+                              ),
+                            );
+                            await drawPolyLineFromOriginToDestination(
+                              widget.userRideRequestDetails!.originLatLng!,
+                              widget.userRideRequestDetails!.destinationLatLng!,
+                            );
+                            Navigator.pop(context);
+                          } else if (rideRequestStatus == "arrived") {
+                            rideRequestStatus = "ontrip";
+                            FirebaseDatabase.instance
+                                .ref()
+                                .child("All Ride Requests")
+                                .child(widget
+                                    .userRideRequestDetails!.rideRequestId!)
+                                .child("status")
+                                .set(rideRequestStatus);
+
+                            setState(() {
+                              buttonTitle = "End Trip";
+                              buttonColor = Colors.red;
+                            });
+                          } else if (rideRequestStatus == "ontrip") {
+                            endTripNow();
+                          }
                         },
                         icon: Icon(
                           Icons.directions_car,

@@ -23,49 +23,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // emailTextEditingController.text = email;
 
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Update"),
-            content: SingleChildScrollView(
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: nameTextEditingController,
-                  )
-                ],
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Update"),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: nameTextEditingController,
+                )
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.red),
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(color: Colors.red),
-                ),
+            TextButton(
+              onPressed: () {
+                userRef.child(firebaseAuth.currentUser!.uid).update({
+                  "name": nameTextEditingController.text.trim(),
+                }).then((value) {
+                  nameTextEditingController.clear();
+                  Fluttertoast.showToast(msg: "Successfully Updated");
+                }).catchError((errorMessage) {
+                  Fluttertoast.showToast(msg: "Error Occured+$errorMessage");
+                });
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Done",
+                style: TextStyle(color: Colors.purple),
               ),
-              TextButton(
-                onPressed: () {
-                  userRef.child(firebaseAuth.currentUser!.uid).update({
-                    "name": nameTextEditingController.text.trim(),
-                  }).then((value) {
-                    nameTextEditingController.clear();
-                    Fluttertoast.showToast(msg: "Successfully Updated");
-                  }).catchError((errorMessage) {
-                    Fluttertoast.showToast(msg: "Error Occured+$errorMessage");
-                  });
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Done",
-                  style: TextStyle(color: Colors.purple),
-                ),
-              ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Future<void> showUserPhoneDialogAlert(BuildContext context, String phone) {

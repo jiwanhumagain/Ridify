@@ -49,7 +49,11 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
     String humanReadableAddress =
         await AssistantMethods.searchAddressForGeographicCoOrdinates(
-            driverCurrentPosition!, context);
+      driverCurrentPosition!,
+      context,
+    );
+
+    AssistantMethods.readDriverRatings(context);
   }
 
   checkIfLocationPermissionAllowed() async {
@@ -73,6 +77,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
         onlineDriverdata.phone = (snap.snapshot.value as Map)["phone"];
         onlineDriverdata.email = (snap.snapshot.value as Map)["email"];
         onlineDriverdata.name = (snap.snapshot.value as Map)["name"];
+        onlineDriverdata.ratings = (snap.snapshot.value as Map)["ratings"];
+
         onlineDriverdata.car_number =
             (snap.snapshot.value as Map)["car_details"]["car_number"];
         onlineDriverdata.car_color =
@@ -85,6 +91,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
         driverVehicleType = (snap.snapshot.value as Map)["car_details"]["type"];
       }
     });
+    AssistantMethods.readDriverEarnings(context);
   }
 
   driverISOnlineNow() async {
@@ -149,7 +156,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
     pushNotificationSystem.initializeCloudMessaging(context);
     pushNotificationSystem.generateAndGetToken();
-
   }
 
   @override

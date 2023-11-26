@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ridify/global/global.dart';
 import 'package:ridify/maps/mapwidgets/profileScreen.dart';
 import 'package:ridify/screen/splashscreen/splash.dart';
+import 'package:ridify/screen/tripHistoryScreen.dart';
 
 class DrawerScreen extends StatelessWidget {
   const DrawerScreen({super.key});
@@ -62,11 +63,21 @@ class DrawerScreen extends StatelessWidget {
                   SizedBox(
                     height: 30,
                   ),
-                  Text(
-                    "Your Trip",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (c) => TripsHistoryScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Your Trip",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                   SizedBox(

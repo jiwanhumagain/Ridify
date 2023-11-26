@@ -9,6 +9,8 @@ import 'package:ridify_driver/screen/auth/welcome.dart';
 import 'package:ridify_driver/screen/ride/car_info.dart';
 import 'package:ridify_driver/screen/splashscreen/splash.dart';
 import 'package:ridify_driver/maps/mapbox.dart';
+import 'package:ridify_driver/tabPages/earningsTab.dart';
+import 'package:ridify_driver/tabPages/ratingsTab.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +30,10 @@ void main() async {
         useMaterial3: true,
       ),
       // home: const WelcomeScreen(),
-      // home: SplashScreen(),
-      home: NotificationDialogBox(),
+      home: SplashScreen(),
+      // home: NotificationDialogBox(),
+
+      // home: RatingsTabPage(),
 
       // home: MapBoxWidget(),
       // home: CarInfoScreen(),

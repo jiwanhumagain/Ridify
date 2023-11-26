@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ridify_driver/global/global.dart';
 import 'package:ridify_driver/screen/splashscreen/splash.dart';
+import 'package:ridify_driver/tabPages/earningsTab.dart';
 import 'package:ridify_driver/tabPages/homeTab.dart';
+import 'package:ridify_driver/tabPages/profileTab.dart';
+import 'package:ridify_driver/tabPages/ratingsTab.dart';
 
 class MapBoxWidget extends StatefulWidget {
   const MapBoxWidget({super.key});
@@ -35,9 +38,9 @@ class _MapBoxWidgetState extends State<MapBoxWidget>
         controller: tabController,
         children: [
           HomeTabPage(),
-          // EarningsTabPage(),
-          // RatingsTabPage(),
-          // ProfileTabPage(),
+          EarningsTabPage(),
+          RatingsTabPage(),
+          ProfileTabPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

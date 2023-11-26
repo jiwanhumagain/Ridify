@@ -10,6 +10,7 @@ import 'package:ridify/infoHandeler/app_info.dart';
 import 'package:ridify/models/directions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:ridify/models/directionsDetails.dart';
+import 'package:ridify/models/tripsHistoryModels.dart';
 import 'package:ridify/models/userModels.dart';
 import 'package:http/http.dart' as http;
 
@@ -80,9 +81,9 @@ class AssistantMethods {
   static double calculateFareAmountFromOriginToDestination(
       DirectionsDetails directionsDetailsInfo) {
     double timeTraveledFareAmountPerMinute =
-        (directionsDetailsInfo.duration_value! / 60) * 0.1;
+        (directionsDetailsInfo.distance_value! / 60) * 0.1;
     double distanceTraveledFareAmountPerKilometer =
-        (directionsDetailsInfo.duration_value! / 1000) * 0.1;
+        (directionsDetailsInfo.distance_value! / 1000) * 0.1;
 
     //USD
     double totalFareAmount = timeTraveledFareAmountPerMinute +
@@ -120,5 +121,63 @@ class AssistantMethods {
       headers: headerNotification,
       body: jsonEncode(officialNotificationFormat),
     );
+  }
+
+  static void readTripsKeysForOnlineUser(context) {
+    FirebaseDatabase.instance
+        .ref()
+        .child("All Ride Requests")
+        .orderByChild("userName")
+        .equalTo(userModelCurrentInfo!.name)
+        .once()
+        .then((snap) {
+      if (snap.snapshot.value != null) {
+        Map keysTripsId = snap.snapshot.value as Map;
+
+        //count total number of trips and share it with provider
+
+        int overAllTripsCounter = keysTripsId.length;
+        Provider.of<AppInfo>(context, listen: false)
+            .updateOverAllTripsCounter(overAllTripsCounter);
+
+        //share trips keys with provider
+
+        List<String> tripsKeysList = [];
+
+        keysTripsId.forEach((key, value) {
+          tripsKeysList.add(key);
+        });
+
+        Provider.of<AppInfo>(context, listen: false)
+            .updateOverAllTripsKeys(tripsKeysList);
+
+        //get trips keys data - read trips complete information
+
+        readTripsHistoryInformation(context);
+      }
+    });
+  }
+
+  static void readTripsHistoryInformation(context) {
+    var tripsAllKeys =
+        Provider.of<AppInfo>(context, listen: false).historyTripsKeysList;
+
+    for (String eachKey in tripsAllKeys) {
+      FirebaseDatabase.instance
+          .ref()
+          .child("All Ride Requests")
+          .child(eachKey)
+          .once()
+          .then((snap) {
+        var eachTripHistory = TripHistoryModel.fromSnapshot(snap.snapshot);
+
+        if ((snap.snapshot.value as Map)["status"] == "ended") {
+          //update or add each history to overaltrips history list
+
+          Provider.of<AppInfo>(context, listen: false)
+              .updateOverAllTripsHistoryInformation(eachTripHistory);
+        }
+      });
+    }
   }
 }

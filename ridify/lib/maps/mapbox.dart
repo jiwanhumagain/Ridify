@@ -20,9 +20,23 @@ import 'package:ridify/maps/mapwidgets/map_search.dart';
 import 'package:ridify/maps/mapwidgets/precisePickUpLocation.dart';
 import 'package:ridify/models/activeNearbyDrivers.dart';
 import 'package:ridify/models/directions.dart';
+import 'package:ridify/screen/rateDriverScreen.dart';
 import 'package:ridify/screen/splashscreen/splash.dart';
 import 'package:ridify/widgets/payFareAmount.dart';
 import 'package:ridify/widgets/progressDialog.dart';
+import 'package:ridify/widgets/payFareAmount.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+Future<void> _makePhoneCall(String url)async{
+
+  if (await canLaunch(url)) {
+    await launch(url);
+  }
+  else{
+    throw "Could not lunch $url";
+  }
+
+}
 
 class MapBoxWidget extends StatefulWidget {
   const MapBoxWidget({super.key});
@@ -81,6 +95,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
 
   List<ActiveNearBYAvailableDrivers> onlineNearByAvailableDriversList = [];
 
+
   locateUSerPosition() async {
     Position cPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -102,7 +117,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
     userEmail = userModelCurrentInfo!.email!;
 
     initializeGeoFireListener();
-    // AssistantMethods.readTripsKeysForOnlineUsers(context);
+    AssistantMethods.readTripsKeysForOnlineUser(context);
   }
 
   initializeGeoFireListener() {
@@ -118,6 +133,8 @@ class _MapBoxWidget extends State<MapBoxWidget> {
         switch (callBack) {
           //whenever any driver is active
           case Geofire.onKeyEntered:
+
+          GeoFireAssistant.activeNearBYAvailableDriversList.clear();
             ActiveNearBYAvailableDrivers activeNearBYAvailableDrivers =
                 ActiveNearBYAvailableDrivers();
             activeNearBYAvailableDrivers.locationLatitiude = map["latitude"];
@@ -415,14 +432,14 @@ class _MapBoxWidget extends State<MapBoxWidget> {
       }
       if ((eventSnap.snapshot.value as Map)["driverPhone"] != null) {
         setState(() {
-          driverCarDetails =
+          driverPhone =
               (eventSnap.snapshot.value as Map)["driverPhone"].toString();
         });
       }
-      if ((eventSnap.snapshot.value as Map)["driverName"] != null) {
+      if ((eventSnap.snapshot.value as Map)["ratings"] != null) {
         setState(() {
-          driverCarDetails =
-              (eventSnap.snapshot.value as Map)["driverName"].toString();
+          driverRatings =
+              (eventSnap.snapshot.value as Map)["ratings"].toString();
         });
       }
       if ((eventSnap.snapshot.value as Map)["status"] != null) {
@@ -478,12 +495,14 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                 String assignedDriverId =
                     (eventSnap.snapshot.value as Map)["driverId"].toString();
 
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (c) => RateDriverScreen(),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) => RateDriverScreen(
+                      assignedDriverId: assignedDriverId,
+                    ),
+                  ),
+                );
 
                 referanceRideRequest!.onDisconnect();
                 tripRideRequestInfoStreamSubscription!.cancel();
@@ -592,9 +611,6 @@ class _MapBoxWidget extends State<MapBoxWidget> {
         driverCurrentPositionLatLng,
         userDestinationPosition,
       );
-      if (directionDetailsInfo == null) {
-        return;
-      }
       setState(() {
         driverRideStatus = "Going Towards Destination" +
             directionDetailsInfo.duration_text.toString();
@@ -899,11 +915,12 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.purple,
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              )),
+                            primary: Colors.purple,
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
                       ],
                     )
@@ -1026,7 +1043,9 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                                   children: [
                                     Image.asset(
                                       "assets/images/taxi_map.png",
-                                      scale: 2,
+                                      // scale: 2,
+                                      height: 20,
+                                      width: 20,
                                     ),
                                     SizedBox(
                                       height: 8,
@@ -1075,7 +1094,9 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                                   children: [
                                     Image.asset(
                                       "assets/images/taxi_map.png",
-                                      scale: 2,
+                                      // scale: 2,
+                                      height: 20,
+                                      width: 20,
                                     ),
                                     SizedBox(
                                       height: 8,
@@ -1142,6 +1163,125 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                 ),
               ),
             ),
+
+            //ui for displaying assigned driver info
+
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: assignedDriverInfoContainerHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Text(
+                        driverRideStatus,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.grey[300],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.purpleAccent,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    driverName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        driverRatings,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Image.asset(
+                                "assets/images/taxi_map.png",
+                                scale: 3,
+                              ),
+                              Text(
+                                driverCarDetails,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.grey[300],
+                      ),
+                      ElevatedButton.icon(
+                          onPressed: () {
+                            _makePhoneCall("tel:${driverPhone}");
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.purple,
+                          ),
+                          icon: Icon(Icons.phone),
+                          label: Text("Call Driver"))
+                    ],
+                  ),
+                ),
+              ),
+            )
 
             // Positioned(
             //   top: 40,

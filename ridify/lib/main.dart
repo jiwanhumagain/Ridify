@@ -5,8 +5,10 @@ import 'package:ridify/infoHandeler/app_info.dart';
 import 'package:ridify/screen/auth/login.dart';
 
 import 'package:ridify/screen/auth/welcome.dart';
+import 'package:ridify/screen/rateDriverScreen.dart';
 import 'package:ridify/screen/splashscreen/splash.dart';
 import 'package:ridify/maps/mapbox.dart';
+import 'package:ridify/screen/tripHistoryScreen.dart';
 import 'package:ridify/widgets/payFareAmount.dart';
 
 void main() async {
@@ -27,10 +29,12 @@ void main() async {
         useMaterial3: true,
       ),
       // home: const WelcomeScreen(),
-      // home: SplashScreen(),
+      home: SplashScreen(),
+      // home: RateDriverScreen(),
+      // home: TripsHistoryScreen(),
 
       // home: MapBoxWidget(),
-      home: PayFareAmountDialog(),
+      // home: PayFareAmountDialog(),
     ),
   ));
 }

@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:ridify/screen/splashscreen/splash.dart';
+import 'package:ridify_driver/screen/splashscreen/splash.dart';
 
-class PayFareAmountDialog extends StatefulWidget {
-  double? fareAmount;
-  PayFareAmountDialog({this.fareAmount});
+class FareAmountCollectionDialog extends StatefulWidget {
+  double? totalFareAmount;
+  FareAmountCollectionDialog({this.totalFareAmount});
 
   @override
-  State<PayFareAmountDialog> createState() => _PayFareAmountDialogState();
+  State<FareAmountCollectionDialog> createState() =>
+      _FareAmountCollectionDialogState();
 }
 
-class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
+class _FareAmountCollectionDialogState
+    extends State<FareAmountCollectionDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(20),
       ),
       backgroundColor: Colors.transparent,
       child: Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(6),
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.purple,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -31,25 +33,15 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
               height: 20,
             ),
             Text(
-              "Fare Amount".toUpperCase(),
+              "Trip Fare Amount",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 20,
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            Divider(
-              thickness: 2,
-              color: Colors.white,
-            ),
-            SizedBox(
-              height: 10,
-            ),
             Text(
-              "Rs" + widget.fareAmount.toString(),
+              "Rs " + widget.totalFareAmount.toString(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -60,55 +52,59 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
               height: 10,
             ),
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(8),
               child: Text(
-                "This is the total farre amount.",
+                "This is the toal fare amount.",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
             SizedBox(
               height: 10,
             ),
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(8),
               child: ElevatedButton(
                 onPressed: () {
-                  Future.delayed(Duration(milliseconds: 10000), () {
-                    Navigator.pop(context, "Cash Paid");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (c) => SplashScreen(),
-                      ),
-                    );
-                  });
+                  Future.delayed(
+                    Duration(milliseconds: 2000),
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (c) => SplashScreen(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Pay  ",
+                      "Collect",
                       style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Colors.purple,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      "Rs" + widget.fareAmount.toString(),
+                      "Rs "+widget.totalFareAmount.toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Colors.purple,
                       ),
                     ),
+
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

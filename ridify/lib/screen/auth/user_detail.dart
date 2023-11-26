@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ridify/global/global.dart';
-import 'package:ridify/screen/auth/forgotPassword.dart';
+// import 'package:ridify/screen/auth/forgotPassword.dart';
 import 'package:ridify/screen/auth/login.dart';
 
 class UserDetail extends StatefulWidget {
@@ -18,6 +18,7 @@ class _UserDetailState extends State<UserDetail> {
   final TextEditingController useremailController = TextEditingController();
   final TextEditingController userpasswordController = TextEditingController();
   final TextEditingController userbioController = TextEditingController();
+  final TextEditingController userphoneController = TextEditingController();
 
   bool _passwordVisible = false;
 
@@ -37,7 +38,8 @@ class _UserDetailState extends State<UserDetail> {
             "id": currentUser!.uid,
             "name": usernameController.text.trim(),
             "email": useremailController.text.trim(),
-            "bio": userbioController.text.trim()
+            "bio": userbioController.text.trim(),
+            "phone": userphoneController.text.trim()
           };
           DatabaseReference userRef =
               FirebaseDatabase.instance.ref().child("users");
@@ -89,10 +91,10 @@ class _UserDetailState extends State<UserDetail> {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.fromLTRB(50, 50, 50, 30),
+                      padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                       child: CircleAvatar(
                         backgroundColor: Colors.purple,
-                        radius: 65,
+                        radius: 45,
                         child: Icon(
                           Icons.account_circle,
                           size: 65,
@@ -185,6 +187,86 @@ class _UserDetailState extends State<UserDetail> {
                       }),
                     ),
                     const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: userphoneController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter Your Phone number";
+                        } else if (value.length < 10) {
+                          return "Your number must be length of 10";
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(
+                          () {
+                            userphoneController.text = value;
+                          },
+                        );
+                      },
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(40),
+                          ),
+                        ),
+                        hintText: 'Enter your phone number',
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade500,
+                        ),
+                        filled: true,
+                        fillColor: Colors.purple.shade100,
+                        prefixIcon: Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                          fill: 0.75,
+                          size: 30,
+                        ),
+                        suffixIcon: userphoneController.text.length == 10
+                            ? Padding(
+                                padding: const EdgeInsets.all(7.0),
+                                child: Container(
+                                  height: 2,
+                                  width: 2,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                  child: const Icon(
+                                    Icons.done,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(7.0),
+                                child: Container(
+                                  height: 5,
+                                  width: 5,
+                                  decoration: userphoneController.text.isEmpty
+                                      ? const BoxDecoration()
+                                      : const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.red,
+                                        ),
+                                  child: userphoneController.text.length==0? const Icon(
+                                    Icons.close,
+                                    color: Colors.purple,
+                                    size: 20,
+                                  ):const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 20,
+                                  )
+                                ),
+                              ),
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                    SizedBox(
                       height: 10,
                     ),
                     TextFormField(
@@ -292,18 +374,23 @@ class _UserDetailState extends State<UserDetail> {
                         ),
                       ),
                     ),
-                   
                     Row(
                       children: [
                         Text("Already have account?"),
-                        TextButton(onPressed: (){
-                          Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Login",
+                            style: TextStyle(color: Colors.purple),
+                          ),
                         ),
-                      );
-                        }, child: Text("Login",style: TextStyle(color: Colors.purple),),),
                       ],
                     )
                   ],

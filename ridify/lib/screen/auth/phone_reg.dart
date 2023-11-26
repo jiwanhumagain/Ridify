@@ -130,29 +130,29 @@ class _PhoneRegistrationState extends State<PhoneRegistration> {
                       hintStyle: const TextStyle(
                         color: Color.fromARGB(95, 50, 50, 50),
                       ),
-                      prefixIcon: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 5,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            showCountryPicker(
-                              context: context,
-                              countryListTheme: const CountryListThemeData(
-                                bottomSheetHeight: 500,
-                              ),
-                              onSelect: (value) {
-                                setState(() {
-                                  selectedCountry = value;
-                                });
-                              },
-                            );
-                          },
-                          child: Text(
-                              "${selectedCountry.flagEmoji}+${selectedCountry.phoneCode}"),
-                        ),
-                      ),
+                      // prefixIcon: Container(
+                      //   padding: const EdgeInsets.symmetric(
+                      //     vertical: 15,
+                      //     horizontal: 5,
+                      //   ),
+                      //   child: InkWell(
+                      //     onTap: () {
+                      //       showCountryPicker(
+                      //         context: context,
+                      //         countryListTheme: const CountryListThemeData(
+                      //           bottomSheetHeight: 500,
+                      //         ),
+                      //         onSelect: (value) {
+                      //           setState(() {
+                      //             selectedCountry = value;
+                      //           });
+                      //         },
+                      //       );
+                      //     },
+                      //     child: Text(
+                      //         "${selectedCountry.flagEmoji}+${selectedCountry.phoneCode}"),
+                      //   ),
+                      // ),
                       suffixIcon: phoneController.text.length == 14
                           ? Padding(
                               padding: const EdgeInsets.all(7.0),
