@@ -1,251 +1,251 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:email_validator/email_validator.dart';
+//import 'package:google_fonts/google_fonts.dart';
+import 'package:unicons/unicons.dart';
+//import 'package:google_fonts/google_fonts.dart';
 
-final formatter = DateFormat.yMd();
-
-class RentTaxiForm extends StatefulWidget {
-  const RentTaxiForm({super.key});
+class RentHomePage extends StatefulWidget {
+  const RentHomePage({super.key});
 
   @override
-  State<RentTaxiForm> createState() => _RentTaxiFormState();
+  State<RentHomePage> createState() => _RentHomePageState();
 }
 
-class _RentTaxiFormState extends State<RentTaxiForm> {
-  final _titleController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _noofPersonController = TextEditingController();
-  final _noofDaysController = TextEditingController();
-  var _selectedValue = 'Car-3 Seater';
-
-  DateTime? _selectedDate;
-  String _errorMessage = '';
-
-  void _presentDatePicker() async {
-    final now = DateTime.now();
-    final firstDate = DateTime(now.year, now.month, now.day);
-
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: firstDate,
-      lastDate: DateTime(now.year, now.month + 6, now.day),
-    );
-    setState(() {
-      _selectedDate = pickedDate;
-    });
-  }
-  void validateEmail(String val) {
-    if(val.isEmpty){
-  setState(() {
-    _errorMessage = "Email can not be empty";
-  });
-    }else if(!EmailValidator.validate(val, true)){
-      setState(() {
-        _errorMessage = "Invalid Email Address";
-      });
-    }else{
-      setState(() {
-
-        _errorMessage = "";
-      });
-    }
-  }
-
-  void _submitExpenseDate() {
-    final enteredNoOfPearson = double.tryParse(_noofPersonController.text);
-    final enteredNoOfPearsonIsInvalid = enteredNoOfPearson == null || enteredNoOfPearson <= 0||enteredNoOfPearson>14;
-
-    final enteredDays=double.tryParse(_noofDaysController.text);
-    final enteredDaysIsInvalid =enteredDays ==null || enteredDays<=0 || enteredDays>=50;
-
-    if (_titleController.text.trim().isEmpty ||
-       enteredNoOfPearsonIsInvalid ||enteredDaysIsInvalid||
-        _selectedDate == null||_emailController.text.trim().isEmpty) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text("Invalid Input"),
-          content:
-              const Text("Please make sure all the parameters are correct"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-              },
-              child: const Text("Okay"),
-            )
-          ],
-        ),
-      );
-      return;
-    }
-  }
-
+class _RentHomePageState extends State<RentHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(),
+
+      Size size = MediaQuery.of(context).size; //check the size of device
+    var brightness = MediaQuery.of(context).platformBrightness;
+        bool isDarkMode = brightness ==
+        Brightness.dark; //check if device is in dark or light mode
+
+     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(40.0), //appbar size
+        child: AppBar(
+          bottomOpacity: 0.0,
+          elevation: 0.0,
+          shadowColor: Colors.transparent,
+          backgroundColor: isDarkMode
+              ? const Color(0xff06090d)
+              : const Color(0xfff8f8f8), //appbar bg color
+          leading: Padding(
+            padding: EdgeInsets.only(
+              left: size.width * 0.05,
+            ),
+            child: SizedBox(
+              height: size.width * 0.1,
+              width: size.width * 0.1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? const Color(0xff070606)
+                      : Colors.white, //icon bg color
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(
+                      10,
+                    ),
+                  ),
+                ),
+                child: Icon(
+                  UniconsLine.bars,
+                  color: isDarkMode
+                      ? Colors.white
+                      : const Color(0xff3b22a1), //icon bg color
+                  size: size.height * 0.025,
+                ),
+              ),
+            ),
+          ),
+          automaticallyImplyLeading: false,
+          titleSpacing: 0,
+          leadingWidth: size.width * 0.15,
+          title: Image.asset(
+             'assets/images/logo.png',
+                 //logo
+            height: size.height * 0.15,
+            width: size.width * 0.9,
+          ),
+          centerTitle: true,
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                right: size.width * 0.05,
+              ),
+              child: SizedBox(
+                height: size.width * 0.1,
+                width: size.width * 0.1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isDarkMode
+                        ? const Color(0xff070606)
+                        : Colors.white, //icon bg color
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: Icon(
+                    UniconsLine.search,
+                    color: isDarkMode ? Colors.white : const Color(0xff3b22a1),
+                    size: size.height * 0.025,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+    //  bottomNavigationBar: buildBottomNavBar(1, size, isDarkMode),
       body: Center(
-        // child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+        child: Container(
+          height: size.height,
+          width: size.height,
+          decoration: BoxDecoration(
+            color: isDarkMode
+                ? const Color(0xff06090d)
+                : const Color(0xfff8f8f8), //background color
+          ),
+          child: SafeArea(
+            child: ListView(
               children: [
-                TextField(
-                  // onChanged: _saveTitleInput,
-                  controller: _titleController,
-                  maxLength: 50,
-                  decoration: InputDecoration(
-                    label: Title(
-                      color: Colors.green,
-                      child: const Text("Name"),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  // onChanged: _saveTitleInput,
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    label: Title(
-                      color: Colors.green,
-                      child: const Text("Email"),
-                    ),
-                    hintText: "example@example.com",
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        // onChanged: _saveTitleInput,
-                        controller: _noofPersonController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          label: Title(
-                            color: Colors.green,
-                            child: const Text("Number of Person"),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: Row(
-                          children: [
-                            DropdownButton(
-                              value: _selectedValue,
-                              items: const [
-                                DropdownMenuItem(
-                                  value: "Car-3 Seater",
-                                  child: Text(
-                                    "Car-3 Seater",
-                                    style: TextStyle(fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: "Jeep-3 Seater",
-                                  child: Text(
-                                    "Jeep-3 Seater",
-                                    style: TextStyle(fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: "Hiace Van-14 Seater",
-                                  child: Text(
-                                    "Hiace Van-14 Seater",
-                                    style: TextStyle(fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                if (value == null) {
-                                  return;
-                                }
-                                setState(
-                                  () {
-                                    _selectedValue = value;
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          // onChanged: _saveTitleInput,
-                          controller: _noofDaysController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            label: Title(
-                              color: Colors.green,
-                              child: const Text("Number of Days"),
+                  padding: EdgeInsets.only(
+                    top: size.height * 0.04,
+                    left: size.width * 0.05,
+                    right: size.width * 0.05,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                      color: isDarkMode
+                          ? const Color(0xff070606)
+                          : Colors.white, //section bg color
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: size.height * 0.04,
+                          ),
+                          child: Align(
+                            child: Text(
+                              'With Corporate Difference',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isDarkMode
+                                    ? Colors.white
+                                    : const Color(0xff3b22a1),
+                                fontSize: size.width * 0.06,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Text(
-                        _selectedDate == null
-                            ? 'Select Starting Date'
-                            : formatter.format(_selectedDate!),
-                      ),
-                      IconButton(
-                        onPressed: _presentDatePicker,
-                        icon: const Icon(Icons.calendar_month),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: size.height * 0.01,
+                          ),
+                          child: Align(
+                            child: Text(
+                              'Enjoy the fun driving in Enterprise',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isDarkMode
+                                    ? Colors.white
+                                    : const Color(0xff3b22a1),
+                                fontSize: size.width * 0.035,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: size.height * 0.03,
+                            left: size.width * 0.04,
+                            bottom: size.height * 0.025,
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: size.width * 0.65,
+                                height: size.height * 0.06,
+                                child: TextField(
+                                  //searchbar
+                                  style: TextStyle(
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                      top: size.height * 0.01,
+                                      left: size.width * 0.04,
+                                      right: size.width * 0.04,
+                                    ),
+                                    enabledBorder: textFieldBorder(),
+                                    focusedBorder: textFieldBorder(),
+                                    border: textFieldBorder(),
+                                    hintStyle: TextStyle(
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                    hintText: 'Search a car',
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: size.width * 0.025,
+                                ),
+                                child: Container(
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.14,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        10,
+                                      ),
+                                    ),
+                                    color: Color(0xff3b22a1), //filters bg color
+                                  ),
+                                  child: Icon(
+                                    UniconsLine.sliders_v,
+                                    color: Colors.white,
+                                    size: size.height * 0.032,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Cancel",
-                      ),
-                    ),
-                    ElevatedButton(
-                      // onPressed: () {
-                      //   print(_enteredTitle);
-                      // },
-                      onPressed: _submitExpenseDate,
-                      child: Text("Book Now"),
-                    ),
-                  ],
-                ),
+           //     buildTopBrands(size, isDarkMode),
+           //     buildMostRented(size, isDarkMode),
               ],
             ),
           ),
-        // ),
+        ),
+      ),
+    );
+  }
+
+  OutlineInputBorder textFieldBorder() {
+    return OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+      borderSide: BorderSide(
+        color: Colors.grey.withOpacity(0.5),
+        width: 1.0,
       ),
     );
   }
 }
+  

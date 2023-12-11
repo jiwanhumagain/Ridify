@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ridify/screen/ride/ride_bike.dart';
 import 'package:ridify/screen/ride/ride_taxi.dart';
 // import 'package:ridify/screen/rent/rent_taxi.dart';
-import 'package:ridify/screen/rent/rent_screen.dart';
+import 'package:ridify/screen/rent/screen/rent_screen.dart';
 class Rental extends StatefulWidget {
   const Rental({super.key});
 

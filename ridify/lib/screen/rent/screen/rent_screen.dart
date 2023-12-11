@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ridify/screen/rent/rent_taxi.dart';
+import 'package:ridify/screen/rent/screen/searchscreen.dart';
 
 class RentScreen extends StatefulWidget {
   const RentScreen({super.key});
@@ -48,7 +49,7 @@ class _RentScreenState extends State<RentScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const RentTaxiForm(),
+                        builder: (context) =>  SearchScreen(),
                       ),
                     );
                   },

@@ -53,7 +53,11 @@ dependencies:
   firebase_storage: ^11.4.1
   fluttertoast: ^8.2.2
   provider: ^6.0.5
-
+  unicons: ^2.0.2
+  google_fonts: ^2.2.0
+  flutter_google_places: ^0.3.0
+  google_maps_webservice: ^0.0.18
+  cloud_firestore: 4.13.5
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +90,21 @@ flutter:
     - assets/images/ride.png
     - assets/images/taxi.png
     - assets/images/taxi_map.png
+    - assets/images/land_rover_0.png
+    - assets/images/land_rover_1.png
+    - assets/images/acura_0.png
+    - assets/images/acura_1.png
+    - assets/images/acura_2.png
+    - assets/images/camaro_0.png
+    - assets/images/camaro_1.png
+    - assets/images/camaro_2.png
+    - assets/images/citroen_0.png
+    - assets/images/citroen_1.png
+    - assets/images/citroen_2.png
+    - assets/images/car1.jpeg
+    - assets/images/car2.jpeg
+    - assets/images/nissan0.jpg
+    - assets/images/nissan1.jpeg
     
   #   - images/a_dot_ham.jpeg
 
