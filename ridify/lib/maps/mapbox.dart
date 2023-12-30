@@ -24,18 +24,15 @@ import 'package:ridify/screen/rateDriverScreen.dart';
 import 'package:ridify/screen/splashscreen/splash.dart';
 import 'package:ridify/widgets/payFareAmount.dart';
 import 'package:ridify/widgets/progressDialog.dart';
-import 'package:ridify/widgets/payFareAmount.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
-Future<void> _makePhoneCall(String url)async{
-
+Future<void> _makePhoneCall(String url) async {
   if (await canLaunch(url)) {
     await launch(url);
-  }
-  else{
+  } else {
     throw "Could not lunch $url";
   }
-
 }
 
 class MapBoxWidget extends StatefulWidget {
@@ -95,7 +92,6 @@ class _MapBoxWidget extends State<MapBoxWidget> {
 
   List<ActiveNearBYAvailableDrivers> onlineNearByAvailableDriversList = [];
 
-
   locateUSerPosition() async {
     Position cPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -133,11 +129,10 @@ class _MapBoxWidget extends State<MapBoxWidget> {
         switch (callBack) {
           //whenever any driver is active
           case Geofire.onKeyEntered:
-
-          GeoFireAssistant.activeNearBYAvailableDriversList.clear();
+            GeoFireAssistant.activeNearBYAvailableDriversList.clear();
             ActiveNearBYAvailableDrivers activeNearBYAvailableDrivers =
                 ActiveNearBYAvailableDrivers();
-            activeNearBYAvailableDrivers.locationLatitiude = map["latitude"];
+            activeNearBYAvailableDrivers.locationlatitude = map["latitude"];
             activeNearBYAvailableDrivers.locationLongitude = map["longitude"];
             activeNearBYAvailableDrivers.driverId = map["key"];
             GeoFireAssistant.activeNearBYAvailableDriversList
@@ -152,12 +147,12 @@ class _MapBoxWidget extends State<MapBoxWidget> {
             GeoFireAssistant.deleteOfflineDriverFromList(map["key"]);
             displayActiveDriversOnUsersMap();
             break;
-          //update drivers location hwen moving
+          //update drivers location when moving
 
           case Geofire.onKeyMoved:
             ActiveNearBYAvailableDrivers activeNearBYAvailableDrivers =
                 ActiveNearBYAvailableDrivers();
-            activeNearBYAvailableDrivers.locationLatitiude = map["latitude"];
+            activeNearBYAvailableDrivers.locationlatitude = map["latitude"];
             activeNearBYAvailableDrivers.locationLongitude = map["longitude"];
             activeNearBYAvailableDrivers.driverId = map["key"];
             GeoFireAssistant.updateActiveNearByAvailableDriverLocation(
@@ -184,8 +179,8 @@ class _MapBoxWidget extends State<MapBoxWidget> {
       Set<Marker> driversMarkerSet = Set<Marker>();
       for (ActiveNearBYAvailableDrivers eachDriver
           in GeoFireAssistant.activeNearBYAvailableDriversList) {
-        LatLng eachDriverActivePosition = LatLng(
-            eachDriver.locationLatitiude!, eachDriver.locationLongitude!);
+        LatLng eachDriverActivePosition =
+            LatLng(eachDriver.locationlatitude!, eachDriver.locationLongitude!);
 
         Marker marker = Marker(
           markerId: MarkerId(eachDriver.driverId!),
@@ -223,7 +218,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
 
   void showSuggestedRidesContainer() {
     setState(() {
-      suggestedRidesContainerHeight = 400;
+      suggestedRidesContainerHeight = 430;
       bottomPaddingofMap = 400;
     });
   }
@@ -399,11 +394,11 @@ class _MapBoxWidget extends State<MapBoxWidget> {
         Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     Map originLocatioMap = {
-      "latitiude": originLocation!.locationLatitude.toString(),
+      "latitude": originLocation!.locationLatitude.toString(),
       "longitude": originLocation.locationLongitude.toString(),
     };
     Map destinationLocatioMap = {
-      "latitiude": destinationLocation!.locationLatitude.toString(),
+      "latitude": destinationLocation!.locationLatitude.toString(),
       "longitude": destinationLocation.locationLongitude.toString(),
     };
 
@@ -544,15 +539,15 @@ class _MapBoxWidget extends State<MapBoxWidget> {
     }
     await retriveOnlineDriversInformation(onlineNearByAvailableDriversList);
 
-    for (var i = 0; i < driversList.length; i++) {
-      if (driversList[i]["car_details"]["type"] == selectedVehicleType) {
-        AssistantMethods.sendNotificationToDriverNow(
-          driversList[i]["token"],
-          referanceRideRequest!.key!,
-          context,
-        );
-      }
-      Fluttertoast.showToast(msg: "Notification Sent Successfully");
+    for (var i = 0; i <= driversList.length; i++) {
+      // if (driversList[0]["car_details"]["type"] == selectedVehicleType) {
+      AssistantMethods.sendNotificationToDriverNow(
+        driversList[i]["token"],
+        referanceRideRequest!.key!,
+        context,
+      );
+
+      // }
 
       showSearchingForDriversContainer();
 
@@ -623,7 +618,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
     setState(() {
       waitingResponsefromDriverHeight = 0;
       searchLocationContainerHeight = 0;
-      assignedDriverInfoContainerHeight = 200;
+      assignedDriverInfoContainerHeight = 400;
       suggestedRidesContainerHeight = 0;
       bottomPaddingofMap = 200;
     });
@@ -1042,10 +1037,10 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                                 child: Column(
                                   children: [
                                     Image.asset(
-                                      "assets/images/taxi_map.png",
-                                      // scale: 2,
-                                      height: 20,
-                                      width: 20,
+                                      "assets/images/car_ride.png",
+                                      scale: 7,
+                                      // height: 20,
+                                      // width: 20,
                                     ),
                                     SizedBox(
                                       height: 8,
@@ -1054,9 +1049,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                                       "Car",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: selectedVehicleType == "Car"
-                                            ? Colors.white
-                                            : Colors.black,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     SizedBox(
@@ -1093,10 +1086,10 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                                 child: Column(
                                   children: [
                                     Image.asset(
-                                      "assets/images/taxi_map.png",
-                                      // scale: 2,
-                                      height: 20,
-                                      width: 20,
+                                      "assets/images/bike_ride.png",
+                                      scale: 7,
+                                      // height: 20,
+                                      // width: 20,
                                     ),
                                     SizedBox(
                                       height: 8,
@@ -1105,9 +1098,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                                       "Bike",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: selectedVehicleType == "Bike"
-                                            ? Colors.white
-                                            : Colors.black,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     SizedBox(
@@ -1132,32 +1123,39 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                         height: 20,
                       ),
                       Expanded(
-                          child: GestureDetector(
-                        onTap: () {
-                          if (selectedVehicleType != "") {
-                            saveRideRequestInformation(selectedVehicleType);
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Please Select The Vehicle");
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.purple,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Take a Ride",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (selectedVehicleType != "") {
+                              print(
+                                "This is drivers token:${driversList.length}",
+                              );
+
+                              saveRideRequestInformation(selectedVehicleType);
+                              // AssistantMethods.sendNotificationToDriverNow();
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: "Please Select The Vehicle",
+                              );
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.purple,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Take a Ride",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                              ),
                             ),
                           ),
                         ),
-                      ))
+                      )
                     ],
                   ),
                 ),
@@ -1180,9 +1178,30 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                   padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      Text(
-                        driverRideStatus,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Spacer(),
+                          Text(
+                            driverRideStatus,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Spacer(),
+                          IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (c) => SplashScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.cancel_rounded,
+                                color: Colors.black,
+                              ))
+                        ],
                       ),
                       SizedBox(
                         height: 5,
@@ -1220,6 +1239,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                                     driverName,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
                                   Row(
@@ -1281,7 +1301,7 @@ class _MapBoxWidget extends State<MapBoxWidget> {
                   ),
                 ),
               ),
-            )
+            ),
 
             // Positioned(
             //   top: 40,

@@ -88,6 +88,10 @@ flutter:
     - assets/images/ride.png
     - assets/images/taxi.png
     - assets/images/taxi_map.png
+    - assets/images/car_ride.png
+    - assets/images/bike_ride.png
+
+
     
   #   - images/a_dot_ham.jpeg
 

@@ -1,11 +1,11 @@
 class ActiveNearBYAvailableDrivers {
   String? driverId;
-  double? locationLatitiude;
+  double? locationlatitude;
   double? locationLongitude;
 
   ActiveNearBYAvailableDrivers({
     this.driverId,
-    this.locationLatitiude,
+    this.locationlatitude,
     this.locationLongitude,
   });
 }

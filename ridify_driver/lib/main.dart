@@ -4,9 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:ridify_driver/Notification/notificationDialogBox.dart';
 import 'package:ridify_driver/infoHandeler/app_info.dart';
 import 'package:ridify_driver/screen/auth/login.dart';
-
+  
 import 'package:ridify_driver/screen/auth/welcome.dart';
 import 'package:ridify_driver/screen/ride/car_info.dart';
+import 'package:ridify_driver/screen/ride/newTripScreen.dart';
 import 'package:ridify_driver/screen/splashscreen/splash.dart';
 import 'package:ridify_driver/maps/mapbox.dart';
 import 'package:ridify_driver/tabPages/earningsTab.dart';
@@ -31,6 +32,7 @@ void main() async {
       ),
       // home: const WelcomeScreen(),
       home: SplashScreen(),
+      // home: NewTripScreen(),
       // home: NotificationDialogBox(),
 
       // home: RatingsTabPage(),

@@ -6,31 +6,34 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridify_driver/Notification/notificationDialogBox.dart';
 import 'package:ridify_driver/global/global.dart';
 import 'package:ridify_driver/models/userRideRequestInformation.dart';
+import 'package:ridify_driver/screen/splashscreen/splash.dart';
 
 class PushNotificationSystem {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  Future initializeCloudMessaging(BuildContext context) async {
+  Future <void>initializeCloudMessaging(BuildContext context) async {
     //when app is closed open directly from push notification
 
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? remoteMessage) {
-      if (remoteMessage != null) {
-        readUserRideRequestInformation(
-            remoteMessage.data["rideRequestId"], context);
-      }
-    });
+    // FirebaseMessaging.instance
+    //     .getInitialMessage()
+    //     .then((RemoteMessage? remoteMessage) {
+    //   if (remoteMessage != null) {
+    //     readUserRideRequestInformation(
+    //         remoteMessage.data["rideRequestId"], context);
+    //   }
+    // });
 
     //when the app is open and receive notification
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
-      readUserRideRequestInformation(
-          remoteMessage!.data["rideRequestId"], context);
-    });
+    // FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
+    //   readUserRideRequestInformation(
+    //       remoteMessage!.data["rideRequestId"], context);
+    // });
     //when app is running in background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
+      print("This is Remotemessage:${remoteMessage}");
       readUserRideRequestInformation(
           remoteMessage!.data["rideRequestId"], context);
+
     });
   }
 
@@ -38,20 +41,22 @@ class PushNotificationSystem {
       String userRideRequestId, BuildContext context) {
     FirebaseDatabase.instance
         .ref()
-        .child("All Ride Request")
+        .child("All Ride Requests")
         .child(userRideRequestId)
         .child("driverId")
-        .onValue
-        .listen((event) {
+        .once()
+        .then((event) {
       if (event.snapshot.value == "waiting" ||
           event.snapshot.value == firebaseAuth.currentUser!.uid) {
         FirebaseDatabase.instance
             .ref()
-            .child("All Ride Request")
+            .child("All Ride Requests")
             .child(userRideRequestId)
             .once()
             .then((snapData) {
-          if (snapData.snapshot.value != null) {
+            String? localStatus = ((snapData.snapshot.value! as Map)["status"]);
+          if (snapData.snapshot.value != null && localStatus == null) {
+            print("Triggered:${snapData.snapshot.value}");
             double originLat = double.parse(
                 (snapData.snapshot.value! as Map)["origin"]["latitude"]);
             double originLng = double.parse(
@@ -83,20 +88,34 @@ class PushNotificationSystem {
             userRideRequestDetails.userPhone = userPhone;
 
             userRideRequestDetails.rideRequestId = rideRequestId;
-
+            // Navigator.push(context, MaterialPageRoute(builder: (c)=>NotificationDialogBox()));
+            
             showDialog(
               context: context,
               builder: (BuildContext context) => NotificationDialogBox(
                 userRideRequestDetails: userRideRequestDetails,
               ),
             );
-          } else {
+
+
+          }
+          else if(localStatus == "accepted"){
+            print("Ride is on progress!");
+          }
+           else {
             Fluttertoast.showToast(msg: "This Ride Request Id do not exist ");
+            Navigator.push(context, MaterialPageRoute(builder: (c)=>SplashScreen()));
           }
         });
       } else {
         Fluttertoast.showToast(msg: "This Ride Request has been cancel ");
         Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (c) => SplashScreen(),
+          ),
+        );
       }
     });
   }
@@ -113,4 +132,5 @@ class PushNotificationSystem {
     messaging.subscribeToTopic("allDrivers");
     messaging.subscribeToTopic("allUsers");
   }
+  
 }

@@ -13,7 +13,7 @@ class GeoFireAssistant {
   static void updateActiveNearByAvailableDriverLocation(ActiveNearBYAvailableDrivers driverWhoMove){
     int indexNumber = activeNearBYAvailableDriversList.indexWhere((element) => element.driverId==driverWhoMove.driverId);
 
-    activeNearBYAvailableDriversList[indexNumber].locationLatitiude=driverWhoMove.locationLatitiude;
+    activeNearBYAvailableDriversList[indexNumber].locationlatitude=driverWhoMove.locationlatitude;
     activeNearBYAvailableDriversList[indexNumber].locationLongitude=driverWhoMove.locationLongitude;
   }
 }

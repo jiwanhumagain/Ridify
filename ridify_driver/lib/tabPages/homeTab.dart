@@ -21,6 +21,7 @@ class HomeTabPage extends StatefulWidget {
 class _HomeTabPageState extends State<HomeTabPage> {
   GoogleMapController? newGoogleMapController;
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
+  bool _isNotificationOpened = false;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -148,15 +149,22 @@ class _HomeTabPageState extends State<HomeTabPage> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+    
     checkIfLocationPermissionAllowed();
     readDriverCurrentInformation();
-
-    PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
-
-    pushNotificationSystem.initializeCloudMessaging(context);
-    pushNotificationSystem.generateAndGetToken();
+    if (_isNotificationOpened == false) {
+      _isNotificationOpened==true;
+      PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
+      pushNotificationSystem.initializeCloudMessaging(context);
+      pushNotificationSystem.generateAndGetToken();
+    }
+    super.initState();
   }
+  // @override
+  // void dispose() {
+
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

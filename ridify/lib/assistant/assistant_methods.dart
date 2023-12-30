@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -91,36 +93,67 @@ class AssistantMethods {
     return double.parse(totalFareAmount.toStringAsFixed(1));
   }
 
-  static sendNotificationToDriverNow(
-      String deviceRegistrationToken, String userRideRequestId, context) async {
+  static Future<void> sendNotificationToDriverNow(
+    String deviceRegistrationToken,
+    String userRideRequestId,
+    context,
+  ) async {
     String destinationAddress = userDropoffAddress;
 
-    Map<String, String> headerNotification = {
-      'Content-Type': 'application/json',
-      'Authorization': cloudMessagingServerToken,
-    };
-    Map bodyNotification = {
-      'body': 'Destination Address:\n$destinationAddress',
-      'title': 'New Trip Request',
-    };
+    // Map<String, String> headerNotification = {
+    //   'Content-Type': 'application/json',
+    //   'Authorization': cloudMessagingServerToken,
+    // };
+    // Map bodyNotification = {
+    //   'body': 'Destination Address:\n$destinationAddress',
+    //   'title': 'New Trip Request',
+    // };
     Map dataMap = {
       'click_action': "FLUTTER_NOTIFICATION_CLICK",
       'id': '1',
       'status': 'done',
       'rideRequestId': userRideRequestId,
     };
-    Map officialNotificationFormat = {
-      'notification': bodyNotification,
-      'data': dataMap,
-      'priority': 'high',
-      'to': deviceRegistrationToken,
-    };
+    // Map officialNotificationFormat = {
+    //   'notification': bodyNotification,
+    //   // 'data': dataMap,
+    //   'priority': 'high',
+    //   // 'to': deviceRegistrationToken,
+    // };
 
-    var responseNotification = http.post(
-      Uri.parse("https://fcm.googleapis.com/fcm/send"),
-      headers: headerNotification,
-      body: jsonEncode(officialNotificationFormat),
-    );
+    // var responseNotification = http.post(
+    //   Uri.parse("https://fcm.googleapis.com/fcm/send"),
+    //   headers: headerNotification,
+    //   body: jsonEncode(officialNotificationFormat),
+    // );
+    // print("This is the response:${responseNotification}");
+
+    try {
+      final body = {
+        "to": deviceRegistrationToken,
+        // "notification": {"title": "Hello", "body": "It worked"}
+        "notification": {
+          'body': 'Destination Address:\n$destinationAddress',
+          'title': 'New Trip Request',
+        },
+        "data":dataMap,
+        
+      };
+
+      var response = await http.post(
+        Uri.parse("https://fcm.googleapis.com/fcm/send"),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader:
+              'key=AAAA0z1x6Bc:APA91bFTGAenxRTbpdR1cADTQbDY67R0hZcjNSpqEj9YQ8qLO4XlJqzDKB0YBJZxnGAa243CJpXzsgnsc4XgbMlMNxr7t8sLFXVPxyC0Y1EgEkGZW4Ih_jX56ux3FQy_iWjoUcvo2VUc'
+        },
+        body: jsonEncode(body),
+      );
+      Fluttertoast.showToast(msg: "Notification Sent successfully");
+      print("This is destination address:${destinationAddress}");
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error occured");
+    }
   }
 
   static void readTripsKeysForOnlineUser(context) {

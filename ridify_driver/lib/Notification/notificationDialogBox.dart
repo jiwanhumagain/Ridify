@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,7 +9,7 @@ import 'package:ridify_driver/models/userRideRequestInformation.dart';
 import 'package:ridify_driver/screen/ride/newTripScreen.dart';
 
 class NotificationDialogBox extends StatefulWidget {
-  UserRideRequestInformation? userRideRequestDetails;
+  final UserRideRequestInformation? userRideRequestDetails;
   NotificationDialogBox({this.userRideRequestDetails});
 
   @override
@@ -35,6 +37,18 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
 
         // trip started now- send driver to new trip screen
 
+        // Navigator.of(context).pop(); // close dialog and only navigate
+
+        int counter = 0;
+        Timer.periodic(Duration(seconds: 5), (Timer timer) {
+          counter++;
+          print('Counter: $counter');
+          if (counter >= 5) {
+            timer.cancel(); // Cancel the timer after 5 iterations
+            print('Timer canceled');
+          }
+        });
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -43,6 +57,8 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
             ),
           ),
         );
+
+        Fluttertoast.showToast(msg: "Going towards new Trip screen");
       } else {
         Fluttertoast.showToast(msg: "This Ride Request Doesn't exists");
       }
