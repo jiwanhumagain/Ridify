@@ -252,10 +252,7 @@ class _UserDetailState extends State<UserDetail> {
                                           shape: BoxShape.circle,
                                           color: Colors.red,
                                         ),
-                                  child: userphoneController.text.length==0? const Icon(
-                                    Icons.close,
-                                    color: Colors.purple,
-                                    size: 20,
+                                  child: userphoneController.text.length==0? null
                                   ):const Icon(
                                     Icons.close,
                                     color: Colors.white,
