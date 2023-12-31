@@ -27,11 +27,11 @@ void main() async {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      // home: const WelcomeScreen(),
-      home: RentScreen(),
+      home: const WelcomeScreen(),
+      //home: RentScreen(),
 
       // home: MapBoxWidget(),
-     // home: PayFareAmountDialog(),
+      // home: PayFareAmountDialog(),
     ),
   ));
 }
