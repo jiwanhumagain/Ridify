@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:ridify/screen/splashscreen/splash.dart';
 
 final formatter = DateFormat.yMd();
 
 class RentTaxiForm extends StatefulWidget {
-  const RentTaxiForm({super.key});
+  const RentTaxiForm({Key? key});
 
   @override
   State<RentTaxiForm> createState() => _RentTaxiFormState();
@@ -18,7 +18,7 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
   final _emailController = TextEditingController();
   final _noofPersonController = TextEditingController();
   final _noofDaysController = TextEditingController();
-  final _phonenumberController=TextEditingController();
+  final _phonenumberController = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   var _selectedValue = 'Car-3 Seater';
 
@@ -39,18 +39,18 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
       _selectedDate = pickedDate;
     });
   }
+
   void validateEmail(String val) {
-    if(val.isEmpty){
-  setState(() {
-    _errorMessage = "Email can not be empty";
-  });
-    }else if(!EmailValidator.validate(val, true)){
+    if (val.isEmpty) {
+      setState(() {
+        _errorMessage = "Email can not be empty";
+      });
+    } else if (!EmailValidator.validate(val, true)) {
       setState(() {
         _errorMessage = "Invalid Email Address";
       });
-    }else{
+    } else {
       setState(() {
-
         _errorMessage = "";
       });
     }
@@ -58,14 +58,19 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
 
   void _submitExpenseDate() {
     final enteredNoOfPearson = double.tryParse(_noofPersonController.text);
-    final enteredNoOfPearsonIsInvalid = enteredNoOfPearson == null || enteredNoOfPearson <= 0||enteredNoOfPearson>14;
+    final enteredNoOfPearsonIsInvalid = enteredNoOfPearson == null ||
+        enteredNoOfPearson <= 0 ||
+        enteredNoOfPearson > 14;
 
-    final enteredDays=double.tryParse(_noofDaysController.text);
-    final enteredDaysIsInvalid =enteredDays ==null || enteredDays<=0 || enteredDays>=50;
+    final enteredDays = double.tryParse(_noofDaysController.text);
+    final enteredDaysIsInvalid =
+        enteredDays == null || enteredDays <= 0 || enteredDays >= 50;
 
     if (_titleController.text.trim().isEmpty ||
-       enteredNoOfPearsonIsInvalid ||enteredDaysIsInvalid||
-        _selectedDate == null||_emailController.text.trim().isEmpty) {
+        enteredNoOfPearsonIsInvalid ||
+        enteredDaysIsInvalid ||
+        _selectedDate == null ||
+        _emailController.text.trim().isEmpty) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -86,33 +91,142 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
     }
   }
 
+  // void _showSuccessDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Icon(
+  //                   Icons.check_circle,
+  //                   color: Colors.green,
+  //                   size: 50,
+  //                 ),
+  //               ],
+  //             ),
+  //             SizedBox(height: 20),
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Text(
+  //                   "You have successfully booked your ride !!",
+  //                   style: TextStyle(fontSize: 14),
+  //                 ),
+  //               ],
+  //             ),
+  //             SizedBox(height: 20),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //               child: Text(
+  //                 'OK',
+  //                 style: TextStyle(color: Colors.white),
+  //               ),
+  //               style: ButtonStyle(
+  //                 backgroundColor:
+  //                     MaterialStateProperty.all<Color>(Colors.purple),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 50,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "You have successfully booked your ride !!",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to the splash screen
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          SplashScreen(), // Replace SplashScreen() with your actual splash screen widget
+                    ),
+                  );
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.purple),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor:  Color.fromARGB(255, 209, 57, 236),
-        title: Text("Book Taxi",style: TextStyle(fontSize:20,fontWeight: FontWeight.bold,color: Colors.white),),
+        backgroundColor: Color.fromARGB(255, 209, 57, 236),
+        title: Text(
+          "Book Taxi",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Center(
-        // child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextField(
-              controller: _titleController,
-              maxLength: 50,
-              decoration: InputDecoration(
-                labelText: "Name",
-                border: OutlineInputBorder(),
-              ),
-            ),
-                SizedBox(
-                  height: 10,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _titleController,
+                maxLength: 50,
+                decoration: InputDecoration(
+                  labelText: "Name",
+                  border: OutlineInputBorder(),
                 ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -122,9 +236,9 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
                   border: OutlineInputBorder(),
                 ),
               ),
-                SizedBox(
-                  height: 10,
-                ),
+              SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: _phonenumberController,
                 keyboardType: TextInputType.phone,
@@ -134,145 +248,144 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
                   border: OutlineInputBorder(),
                 ),
               ),
-                 SizedBox(
-                  height: 10,
-                ),
-                Row(
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _noofPersonController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Number of Person",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                        children: [
+                          DropdownButton(
+                            value: _selectedValue,
+                            items: const [
+                              DropdownMenuItem(
+                                value: "Car-3 Seater",
+                                child: Text(
+                                  "Car-3 Seater",
+                                  style: TextStyle(fontWeight: FontWeight.w300),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: "Jeep-3 Seater",
+                                child: Text(
+                                  "Jeep-3 Seater",
+                                  style: TextStyle(fontWeight: FontWeight.w300),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: "Hiace Van-14 Seater",
+                                child: Text(
+                                  "Hiace Van-14 Seater",
+                                  style: TextStyle(fontWeight: FontWeight.w300),
+                                ),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              if (value == null) {
+                                return;
+                              }
+                              setState(
+                                () {
+                                  _selectedValue = value;
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: _noofPersonController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Number of Person",
-                      border: OutlineInputBorder(),
-                    ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: Row(
-                          children: [
-                            DropdownButton(
-                              value: _selectedValue,
-                              items: const [
-                                DropdownMenuItem(
-                                  value: "Car-3 Seater",
-                                  child: Text(
-                                    "Car-3 Seater",
-                                    style: TextStyle(fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: "Jeep-3 Seater",
-                                  child: Text(
-                                    "Jeep-3 Seater",
-                                    style: TextStyle(fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: "Hiace Van-14 Seater",
-                                  child: Text(
-                                    "Hiace Van-14 Seater",
-                                    style: TextStyle(fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                if (value == null) {
-                                  return;
-                                }
-                                setState(
-                                  () {
-                                    _selectedValue = value;
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          // onChanged: _saveTitleInput,
-                          controller: _noofDaysController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            label: Title(
-                              color: Colors.green,
-                              child: const Text("Number of Days"),
-                            ),
+                        controller: _noofDaysController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          label: Title(
+                            color: Colors.green,
+                            child: const Text("Number of Days"),
                           ),
                         ),
                       ),
-                      Text(
-                        _selectedDate == null
-                            ? 'Select Starting Date'
-                            : formatter.format(_selectedDate!),
-                      ),
-                      IconButton(
-                        onPressed: _presentDatePicker,
-                        icon: const Icon(Icons.calendar_month),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      _selectedDate == null
+                          ? 'Select Starting Date'
+                          : formatter.format(_selectedDate!),
+                    ),
+                    IconButton(
+                      onPressed: _presentDatePicker,
+                      icon: const Icon(Icons.calendar_month),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: Row(
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          "Cancel",
-                        ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancel",
                       ),
-                     ElevatedButton(
+                    ),
+                    ElevatedButton(
                       onPressed: () {
                         _submitExpenseDate();
                         Map<String, dynamic> data = {
                           "Name": _titleController.text,
-                          "Enail": _emailController.text,
-                          "phonenumber":_phonenumberController.text,
-                          "No.of Person": _noofPersonController.text,
-                          "NO of days": _noofDaysController.text,
-                  
+                          "Email": _emailController.text,
+                          "PhoneNumber": _phonenumberController.text,
+                          "NoOfPerson": _noofPersonController.text,
+                          "NoOfDays": _noofDaysController.text,
+                          // Include other fields as needed
                         };
-                  
-                        final CollectionReference usersRef = firestore.collection('Booked Details');
-                        usersRef.add(data)
-                            .then((value) => print("Booked"))
-                            .catchError((error) => print("Failed to book: $error"));
+
+                        final CollectionReference usersRef =
+                            firestore.collection('Booked Details');
+                        usersRef.add(data).then((value) {
+                          print("Booked");
+                          _showSuccessDialog(context);
+                        }).catchError(
+                            (error) => print("Failed to book: $error"));
                       },
-                      //  onPressed: _submitExpenseDate,
-                        child: Text("Book Now"),
-                      ),
-                    ],
-                  ),
+                      child: Text("Book Now"),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        // ),
+        ),
       ),
     );
   }
 }
-
