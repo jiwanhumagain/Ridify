@@ -6,6 +6,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:ridify/screen/rent/screen/SearchResultScreen.dart';
 import 'package:ridify/screen/rent/constant.dart';
+import 'package:ridify/screen/rent/screen/search.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -279,7 +280,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         
                          Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return SearchResultScreen();
+                          //return SearchResultScreen();
+                          return RentCar();
                        }));
                        }
                        ),

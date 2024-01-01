@@ -1,13 +1,17 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:ridify/screen/rent/Booked/reciept.dart';
 
 final formatter = DateFormat.yMd();
 
 class RentTaxiForm extends StatefulWidget {
-  const RentTaxiForm({super.key});
+   final String name;
+  final String model;
+  const RentTaxiForm({ Key? key, required this.name, required this.model}) : super(key: key);
 
   @override
   State<RentTaxiForm> createState() => _RentTaxiFormState();
@@ -17,7 +21,7 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
   final _titleController = TextEditingController();
   final _emailController = TextEditingController();
   final _noofPersonController = TextEditingController();
-  final _noofDaysController = TextEditingController();
+ final _noofDaysController = TextEditingController();
   final _phonenumberController=TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   var _selectedValue = 'Car-3 Seater';
@@ -60,7 +64,7 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
     final enteredNoOfPearson = double.tryParse(_noofPersonController.text);
     final enteredNoOfPearsonIsInvalid = enteredNoOfPearson == null || enteredNoOfPearson <= 0||enteredNoOfPearson>14;
 
-    final enteredDays=double.tryParse(_noofDaysController.text);
+  final enteredDays=double.tryParse(_noofDaysController.text);
     final enteredDaysIsInvalid =enteredDays ==null || enteredDays<=0 || enteredDays>=50;
 
     if (_titleController.text.trim().isEmpty ||
@@ -205,28 +209,26 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: TextField(
-                          // onChanged: _saveTitleInput,
-                          controller: _noofDaysController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            label: Title(
-                              color: Colors.green,
-                              child: const Text("Number of Days"),
+                      
+                      
+                        Expanded(child: Center(
+                          child: Row(children: [
+                            Text(
+                              _selectedDate == null
+                                  ? 'Select Starting Date'
+                                  : formatter.format(_selectedDate!),
                             ),
+                                               
+                          IconButton(
+                            onPressed: _presentDatePicker,
+                            icon: const Icon(Icons.calendar_month),
                           ),
-                        ),
-                      ),
-                      Text(
-                        _selectedDate == null
-                            ? 'Select Starting Date'
-                            : formatter.format(_selectedDate!),
-                      ),
-                      IconButton(
-                        onPressed: _presentDatePicker,
-                        icon: const Icon(Icons.calendar_month),
-                      ),
+                          ],
+                          
+                          ),
+                        ),),
+                      
+                  
                     ],
                   ),
                 ),
@@ -252,16 +254,49 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
                           "Enail": _emailController.text,
                           "phonenumber":_phonenumberController.text,
                           "No.of Person": _noofPersonController.text,
-                          "NO of days": _noofDaysController.text,
+                        //  "NameofVechicle":
+                       //   "ModelofVechicle":
+                      
                   
                         };
                   
                         final CollectionReference usersRef = firestore.collection('Booked Details');
                         usersRef.add(data)
-                            .then((value) => print("Booked"))
-                            .catchError((error) => print("Failed to book: $error"));
+                            .then((value) =>AwesomeDialog(
+                              context: context,
+                              // ignore: deprecated_member_use
+                              animType: AnimType.LEFTSLIDE,
+                              headerAnimationLoop: false,
+                              // ignore: deprecated_member_use
+                              dialogType: DialogType.SUCCES,
+                              title: 'Succes',
+                              desc: 'Car Booked Successfully..',
+                              btnOkOnPress: () {
+                               // debugPrint('OnClcik');
+                                  Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                           
+                                return ReceiptScreen(
+                                //model: cardetail!['Model'],
+                                // name: cardetail['Name'],
+                                customerName:_titleController.text,
+                                carModel: 'Toyota Camry',
+                                rentDays: 5,
+                                rentalAmount: 250.0,
+                                pickupDate: DateTime.now(),
+                                returnDate: DateTime.now().add(Duration(days: 5)),
+                                );
+                            }));
+                              },
+                              btnOkIcon: Icons.check_circle,
+                              // onDismissCallback: () {
+                              //   // Print('Dialog Dissmiss from callback');
+                              // }
+                              ).show(),
+                              )
+                            .catchError((error) => toast());
                       },
-                      //  onPressed: _submitExpenseDate,
+                      
                         child: Text("Book Now"),
                       ),
                     ],
@@ -273,6 +308,19 @@ class _RentTaxiFormState extends State<RentTaxiForm> {
         // ),
       ),
     );
+  }
+    toast() {
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.RIGHSLIDE,
+        headerAnimationLoop: false,
+        title: 'Error',
+        desc: 'Please Select Data',
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.red)
+      ..show();
   }
 }
 

@@ -27,7 +27,7 @@ void main() async {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      // home: const WelcomeScreen(),
+      // home: const SplashScreen(),
       home: RentScreen(),
 
       // home: MapBoxWidget(),
